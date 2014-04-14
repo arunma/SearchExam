@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:security="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.2.xsd"
+             xmlns:tx="http://www.springframework.org/schema/tx">
+
+    <http pattern="/assets/**" security="none"/>
+    <http pattern="/" security="none"/>
+    <http pattern="/login" security="none"/>
+
+    <!-- HTTP Filter Chain -->
+    <http auto-config="true">
+
+        <intercept-url pattern="/**" access="ROLE_USER"/>
+        <form-login login-page="/login"
+                    always-use-default-target="false"
+                    default-target-url="/search/searchpage"
+                    authentication-failure-url="/login?error"
+                    username-parameter="username"
+                    password-parameter="password"/>
+         <logout logout-success-url="/login?logout" />
+    </http>
+
+
+    <!-- Authentication -->
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider user-service-ref="securityService">
+        </authentication-provider>
+    </authentication-manager>
+
+
+</beans:beans>
